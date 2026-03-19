@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Test</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div id="messages"></div>
+    <input type="text" id="messageInput" placeholder="Type a message...">
+    <button onclick="sendMessage()">Send</button>
+    <div id="typing"></div>
+
+    <script>
+        const token = prompt('Enter your JWT token:');
+        const socket = io({
+            auth: { token }
+        });
+
+        socket.on('connect', () => {
+            console.log('Connected');
+            document.body.style.backgroundColor = 'lightgreen';
+        });
+
+        socket.on('new-message', (message) => {
+            const messages = document.getElementById('messages');
+            messages.innerHTML += `<p><b>${message.sender.username}:</b> ${message.content}</p>`;
+        });
+
+        socket.on('user-typing', ({ username, isTyping }) => {
+            const typing = document.getElementById('typing');
+            if (isTyping) {
+                typing.innerHTML = `${username} is typing...`;
+            } else {
+                typing.innerHTML = '';
+            }
+        });
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const roomId = prompt('Enter room ID:');
+
+            socket.emit('send-message', {
+                content: input.value,
+                roomId: roomId
+            });
+
+            input.value = '';
+        }
+    </script>
+</body>
+</html>
