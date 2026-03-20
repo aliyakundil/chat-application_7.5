@@ -30,13 +30,37 @@ router.post("/auth/register", async (req, res) => {
     req.body;
   const { firstName, lastName, bio } = profile || {};
 
-  const users = await registerUser(req.body);
-
   if (!email || !password || !username) {
     return res.status(400).send({ error: "Missing required fields" });
   }
 
+  const users = await registerUser(req.body);
+
+  if (!users.success) {
+    return res.status(400).json({ error: "User not created" });
+  }
+
+  const user = users.data;
+
   if (!users) return null;
+
+  const payload = {
+    userId: user._id.toString(),
+    name: user.username,
+    role: user.role || "user",
+    iss: "myapp",
+    aud: "myapp-users",
+    isEmailVerified: user.isEmailVerified
+  };
+
+  const accessToken = generateAccessToken(payload);
+
+  const refreshToken = jwt.sign(payload, REFRESH_TOKEN_SECRET!, {
+    expiresIn: "7d",
+  });
+
+  user.refreshToken.push(refreshToken);
+  await user.save();
 
   const userDto = {
     email: email,
@@ -44,6 +68,8 @@ router.post("/auth/register", async (req, res) => {
     isEmailVerified: isEmailVerified,
     profile: profile,
     role: role,
+    accessToken,
+    refreshToken,
   };
 
   res.status(201).send(userDto);
@@ -82,28 +108,8 @@ router.post("/auth/resend-verification", async (req, res) => {
     return res.status(404).json({ message: "User not found" });
   }
 
-  const payload = { 
-    userId: userEmail._id,
-    name: userEmail.username,
-    role: userEmail.role || "user",   
-    iss: "myapp",
-    aud: "myapp-users",
-    isEmailVerified: userEmail.isEmailVerified
-  };
-
-  const accessToken = jwt.sign(payload, ACCESS_TOKEN_SECRET!, {
-    expiresIn: "15m",
-  }); // уникальный токен
-  const refreshToken = jwt.sign(payload, REFRESH_TOKEN_SECRET!, {
-    expiresIn: "7d",
-  });
-
-  userEmail.refreshToken.push(refreshToken);
-
   res.json({
     message: "Verification tokens generated",
-    accessToken,
-    refreshToken,
   });
 });
 
