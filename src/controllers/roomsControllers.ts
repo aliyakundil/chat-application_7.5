@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import path from "path";
-import fileDirName from "../utils/dirname";
+import fileDirName from "../utils/dirname.js";
 
 const { __dirname } = fileDirName(import.meta.url)
 

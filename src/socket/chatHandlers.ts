@@ -1,6 +1,6 @@
 import { Server, Socket } from "socket.io";
-import Message from "../models/Message";
-import Room from "../models/Room";
+import Message from "../models/Message.js";
+import Room from "../models/Room.js";
 
 export function chatHandlers(io: Server, socket: Socket) {
   console.log("chatHandlers INIT"); 

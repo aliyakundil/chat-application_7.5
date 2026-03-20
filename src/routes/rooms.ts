@@ -1,10 +1,10 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
 import mongoose from "mongoose";
-import Room from "../models/Room";
-import Message from "../models/Message";
-import { authenticateToken } from "../middleware/auth";
-import { getHomePage } from "../controllers/roomsControllers";
+import Room from "../models/Room.js";
+import Message from "../models/Message.js";
+import { authenticateToken } from "../middleware/auth.js";
+import { getHomePage } from "../controllers/roomsControllers.js";
 
 const router = Router();
 

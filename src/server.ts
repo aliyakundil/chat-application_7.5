@@ -4,14 +4,14 @@ import cors from "cors";
 import helmet from "helmet";
 import path from "path";
 import { Server, Socket } from "socket.io";
-import { connectToDb } from "./config/database";
-import fileDirName from "./utils/dirname";
-import router from "./routes/rooms";
-import authRouter from "./routes/auth";
-import healthRouter from "./routes/health";
-import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
-import { chatHandlers } from "./socket/chatHandlers";
-import { authenticateSocket } from "./socket/socketAuth"
+import { connectToDb } from "./config/database.js";
+import fileDirName from "./utils/dirname.js";
+import router from "./routes/rooms.js";
+import authRouter from "./routes/auth.js";
+import healthRouter from "./routes/health.js";
+import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
+import { chatHandlers } from "./socket/chatHandlers.js";
+import { authenticateSocket } from "./socket/socketAuth.js"
 
 // import { authenticateSocket } from "./middleware/socketAuth";
 
