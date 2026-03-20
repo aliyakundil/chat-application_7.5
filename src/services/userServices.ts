@@ -144,7 +144,6 @@ export async function followUser(followerId: string, followingId: string) {
     throw new Error("User not found");
   }
 
-  // если уже подписан — ничего не делаем
   if (follower.following.some((id) => id.equals(followingObjectId))) {
     return { follower, following, followed: false };
   }

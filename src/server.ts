@@ -11,10 +11,7 @@ import authRouter from "./routes/auth.js";
 import healthRouter from "./routes/health.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 import { chatHandlers } from "./socket/chatHandlers.js";
-import { authenticateSocket } from "./socket/socketAuth.js"
-
-// import { authenticateSocket } from "./middleware/socketAuth";
-
+import { authenticateSocket } from "./socket/socketAuth.js";
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -30,7 +27,6 @@ const publickDirPath = path.join(__dirname, 'public');
 
 app.use(express.static(publickDirPath));
 
-// app.use('/rooms', express.static(path.join(__dirname, '..', 'rooms')));
 app.use('/api/rooms', router);
 app.use('/api', authRouter);
 app.use('/api', healthRouter);

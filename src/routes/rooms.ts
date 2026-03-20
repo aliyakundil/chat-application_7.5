@@ -38,7 +38,7 @@ router.post('/', authenticateToken, async(req: Request, res: Response) => {
     const room = new Room({
       name,
       isPublic: isPublic ?? false,
-      members: [new mongoose.Types.ObjectId(userId)], // 👈 конвертируем в ObjectId
+      members: [new mongoose.Types.ObjectId(userId)], 
       admins: [new mongoose.Types.ObjectId(userId)],
       lastActivity: new Date()
     });
@@ -63,7 +63,7 @@ router.get("/:roomId/messages", authenticateToken, async (req: Request, res: Res
     const room = await Room.findById(roomId);
     if (!room) return res.status(404).json({ error: "Room not found" });
 
-    if (!room.members.includes(userId)) {
+    if (!room.members.some(memberId => memberId.equals(userId))) {
       return res.status(403).json({ error: "Access denied" });
     }
 

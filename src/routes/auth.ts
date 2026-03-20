@@ -134,7 +134,7 @@ router.post("/auth/login", async (req: Request, res: Response) => {
   const payload = {
     userId: user._id.toString(),
     name: user.username,
-    role: user.role || "user",   // для requireRole
+    role: user.role || "user",   
     iss: "myapp",
     aud: "myapp-users",
     isEmailVerified: user.isEmailVerified
