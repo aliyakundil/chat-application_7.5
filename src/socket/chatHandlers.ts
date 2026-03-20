@@ -69,12 +69,24 @@ export function chatHandlers(io: Server, socket: Socket) {
     }
   });
 
-  socket.on("typing", ({ roomId, isTyping }) => {
-    socket.to(roomId).emit("user-typing", {
-      userId: socket.data.userId,
-      username: socket.data.username,
-      isTyping,
-    });
+  socket.on("typing", async ({ roomId, isTyping }) => {
+    try {
+      const room = await Room.findById(roomId);
+
+      if (!room) return room;
+
+      const isMember = room.members.map(m => m.toString()).includes(socket.data.userId);
+      if (!isMember) return;
+
+      socket.to(roomId).emit("user-typing", {
+        userId: socket.data.userId,
+        username: socket.data.username,
+        isTyping,
+      });
+
+    } catch (err) {
+      console.log("typing error:", err);
+    }
   });
 
   socket.on("message-read", async ({ messageId }) => {
