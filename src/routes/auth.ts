@@ -122,13 +122,9 @@ function generateAccessToken(payload: { userId: string; role: string; name: stri
 router.post("/auth/login", async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
 
-  const user = await User.findOne({ $or: [{ email }, { username }] }).select(
-    "+password",
-  );
+  const user = await User.findOne({ $or: [{ email }, { username }] }).select("+password");
 
-  if (!user) {
-    return res.status(401).json({ msg: "Invalid credentials" });
-  }
+  if (!user) return res.status(401).json({ msg: "Invalid credentials" });
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
