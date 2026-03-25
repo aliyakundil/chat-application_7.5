@@ -94,6 +94,12 @@ export function chatHandlers(io: Server, socket: Socket) {
       const message = await Message.findById(messageId);
       if (!message) return;
 
+      const room = await Room.findById(message.room);
+      if (!room) return;
+
+      const isMember = room.members.map(m => m.toString()).includes(socket.data.userId);
+      if (!isMember) return;
+
       const hasRead = message.readBy.map(id => id.toString()).includes(socket.data.userId);
       if (!hasRead) {
         message.readBy.push(socket.data.userId);
