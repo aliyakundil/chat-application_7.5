@@ -15,6 +15,10 @@ export const roomSchema = new mongoose.Schema({
     trim: true,
     unique: true
   },
+  isPublic: {
+    type: Boolean,
+    default: false
+  },
   members: [{
     type: Schema.Types.ObjectId,
     ref: "User",
