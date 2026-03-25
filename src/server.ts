@@ -9,6 +9,7 @@ import fileDirName from "./utils/dirname.js";
 import router from "./routes/rooms.js";
 import authRouter from "./routes/auth.js";
 import healthRouter from "./routes/health.js";
+import routerHome from "./routes/home.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 import { chatHandlers } from "./socket/chatHandlers.js";
 import { authenticateSocket } from "./socket/socketAuth.js";
@@ -27,9 +28,10 @@ const publickDirPath = path.join(__dirname, 'public');
 
 app.use(express.static(publickDirPath));
 
+app.use('/api', routerHome);
 app.use('/api/rooms', router);
 app.use('/api', authRouter);
-app.use('/api', healthRouter);
+app.use('/api/health', healthRouter);
 
 
 const io = new Server(httpServer, {

@@ -4,11 +4,10 @@ import mongoose from "mongoose";
 import Room from "../models/Room.js";
 import Message from "../models/Message.js";
 import { authenticateToken } from "../middleware/auth.js";
-import { getHomePage } from "../controllers/roomsControllers.js";
 
 const router = Router();
 
-router.get('/', getHomePage, authenticateToken, async (req: Request, res: Response) => {
+router.get('/', authenticateToken, async (req: Request, res: Response) => {
   try {
     const userId = (req.user as any).userId;
 
