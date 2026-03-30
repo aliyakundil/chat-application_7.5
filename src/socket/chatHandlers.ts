@@ -8,6 +8,10 @@ export function chatHandlers(io: Server, socket: Socket) {
     try {
       const room = await Room.findById(roomId);
 
+      if (!socket.rooms.has(roomId)) {
+        return socket.emit("error", { message: "You are not in this room"});
+      }
+
       if (!room) {
         return socket.emit("error", { message: "Room not found" });
       }
@@ -29,6 +33,11 @@ export function chatHandlers(io: Server, socket: Socket) {
 
   socket.on("leave-room", ({ roomId }) => {
     socket.leave(roomId);
+    
+    if (!socket.rooms.has(roomId)) {
+      return socket.emit("error", { message: "You are not in this room"});
+    }
+    
     io.to(roomId).emit("user-left-room", {
       userId: socket.data.userId,
       username: socket.data.username,
@@ -38,6 +47,11 @@ export function chatHandlers(io: Server, socket: Socket) {
   socket.on("send-message", async ({ roomId, content }) => {
     try {
       const room = await Room.findById(roomId);
+
+      if (!socket.rooms.has(roomId)) {
+        return socket.emit("error", { message: "You are not in this room"});
+      }
+
       if (!room) return socket.emit("error", { message: "Room not found" });
 
       const isMember = room.members.map(m => m.toString()).includes(socket.data.userId);
@@ -72,6 +86,10 @@ export function chatHandlers(io: Server, socket: Socket) {
   socket.on("typing", async ({ roomId, isTyping }) => {
     try {
       const room = await Room.findById(roomId);
+
+      if (!socket.rooms.has(roomId)) {
+        return socket.emit("error", { message: "You are not in this room"});
+      }
 
       if (!room) return room;
 

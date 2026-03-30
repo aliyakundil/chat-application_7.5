@@ -24,9 +24,10 @@ app.use(helmet());
 app.use(cors());
 
 const { __dirname, __filename } = fileDirName(import.meta.url);
-const publickDirPath = path.join(__dirname, 'public');
+// const publickDirPath = path.join(__dirname, 'public');
+app.use(express.static("public"));
 
-app.use(express.static(publickDirPath));
+// app.use(express.static(publickDirPath));
 
 app.use('/api', routerHome);
 app.use('/api/rooms', router);
